@@ -1,7 +1,7 @@
 {
   "name": "feathers-couchbase",
   "description": "Feathers Couchbase Service",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "homepage": "https://github.com/direktspeed/feathers-couchbase",
   "repository": {
     "type": "git",
