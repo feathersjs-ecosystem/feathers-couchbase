@@ -70,7 +70,7 @@
     "feathers": "2.2.2",
     "feathers-rest": "1.8.0",
     "feathers-service-tests": "0.10.2",
-    "feathers-socketio": "2.0.0",
+    "feathers-socketio": "2.0.1",
     "istanbul": "1.1.0-alpha.1",
     "mocha": "4.0.1",
     "rimraf": "2.6.2",
