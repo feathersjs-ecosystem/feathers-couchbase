@@ -78,6 +78,7 @@ class CouchbaseService {
     debug('peep-api::services::couchbase::setup')((!!app),path);
     this.app = app;
     this.path = path;
+    this.bucket = this.app.get('couchbaseClient').bucket;
   }
   find(params) {
     debug('peep-api::services::couchbase::find')(params);
@@ -262,8 +263,9 @@ class CouchbaseService {
       cbKey = data.cbKey;
     }
     data.cbKey = cbKey;
+    var self = this;
     return this._checkRequired(data)
-      .then(()=>this._upsert(cbKey,data))
+      .then(()=>self._upsert(cbKey,data))
       .catch((err)=>{
         debug('peep-api::services::couchbase::_create::error')(data,params,hasId,err);
       });
@@ -343,19 +345,22 @@ class CouchbaseService {
   }
   _get(id,params) {
     debug('peep-api::services::couchbase::_get')(id,params);
-    return this._isArray(id,this._getPromise);
+    return this._isArray(id);
   }
-  _isArray(id,promise){
+  _isArray(id){
     if (Array.isArray(id)){
       //TODO: Use getMulti?
       debug('peep-api::services::couchbase::_isArray::true')(id);
-      return Promise.all(id.map(promise));
+      return Promise.all(id.map(this._getPromise));
     } else {
       debug('peep-api::services::couchbase::_isArray::false')(id);
-      return promise(id);
+      return this._getPromise(id);
     }
   }
   _getPromise(id) {
+    console.log(this.bucket,super.bucket);
+    console.log('ddddddddd');
+    console.log(this.bucket);
     var promise = new Promise((resolve,reject) =>{
       debug('peep-api::services::couchbase::_get::result')(id);
       this.bucket.get(id,(err,data)=>{
