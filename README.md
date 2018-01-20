@@ -1,4 +1,5 @@
 # New Futures
+
 - update method choose able (n1ql,upsert)
 - patch method choose able (n1ql,upsert)
 - pagination
@@ -10,11 +11,11 @@
 // Create App Model
 function createModel(app)
 module.exports = function (app) {
-  const Cluster = app.get('couchbase'); // from config
+  const Cluster = app.get('couchbaseClusterConfig'); // from config
   const Model = {
-   Couchbase: Couchbase,
-   Cluster:
-   Bucket:
+   couchbaseClient: Couchbase,
+   couchbaseCluster:
+   couchbaseBucket:
    paginate:
   }
 

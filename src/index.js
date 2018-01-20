@@ -2,13 +2,20 @@
 const uuid = require('uuid/v4');
 const debug = require('debug');
 const Proto = require('uberproto');
-const filter = require('feathers-query-filters');
-const errors = require('feathers-errors');
-const { sorter, matcher, select, _ } = require('feathers-commons');
+
+const errors = require('@feathersjs/errors');
+const { 
+  sorter, 
+  matcher, 
+  select, 
+  filterQuery, 
+  _ 
+} = require('@feathersjs/commons');
 //TODO: Add cas support
-class CouchbaseService {
+export class Service {
   constructor (options = {}) {
     this.options = options.options || {};
+    //this.couchbase = options.couchbase 
     this.paginate = options.paginate || {};
     this._id = this.id = options.idField || options.id || '_id';
     this._uId = options.startId || 0;
@@ -17,7 +24,7 @@ class CouchbaseService {
     this._matcher = options.matcher || matcher;
     this._sorter = options.sorter || sorter;
     this._select = options.select || select;
-    this._filter = options.filter || filter;
+    this._filter = options.filter || filterQuery;
     this._errors = options.errors || errors;
     this.options.required = options.required || [];
     this._ = _;
@@ -617,9 +624,11 @@ class CouchbaseService {
 }
 
 export default function init (options) {
-  console.log(this.get('couchbaseClient').bucket);
-  process.exit();
-  return new CouchbaseService(options);
+  if (!this.get('couchbaseClient').bucket){
+    console.log('WARNING!!!: Found no couchbaseClient app Config');
+  }
+
+  return new Service(options);
 }
 
-init.Service = CouchbaseService;
+//init.Service = Service;

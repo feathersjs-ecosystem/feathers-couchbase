@@ -1,7 +1,7 @@
 {
   "name": "feathers-couchbase",
   "description": "Feathers Couchbase Service",
-  "version": "2.7.6",
+  "version": "2.7.7",
   "homepage": "https://github.com/direktspeed/feathers-couchbase",
   "repository": {
     "type": "git",
@@ -52,10 +52,9 @@
     "node": ">= 4"
   },
   "dependencies": {
-    "couchbase": "^2.4.0",
-    "feathers-commons": "^0.8.1",
-    "feathers-errors": "^2.0.1",
-    "feathers-query-filters": "^2.0.0",
+    "couchbase": "^2.4.3",
+    "@feathersjs/commons": "^1.4.0",
+    "@feathersjs/errors": "^3.2.0",
     "lodash.omit": "^4.3.0",
     "uberproto": "^1.2.0"
   },
