@@ -1,4 +1,4 @@
-//Swagger Documentation !
+// Swagger Documentation !
 module.exports = {
   find: {
     parameters: [

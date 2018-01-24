@@ -1,9 +1,9 @@
 const mkdirp = require('mkdirp');
 const path = require('path');
-function createArtistFolder(hook){
-  var imageFolder = path.join(__dirname,'..','..','public','bilder', hook.data._id);
-  return new Promise((resolve,reject)=>{
-    mkdirp(imageFolder, (err)=>{
+function createArtistFolder (hook) {
+  var imageFolder = path.join(__dirname, '..', '..', 'public', 'bilder', hook.data._id);
+  return new Promise((resolve, reject) => {
+    mkdirp(imageFolder, (err) => {
       if (err) {
         reject(err);
       }
@@ -11,7 +11,6 @@ function createArtistFolder(hook){
     });
   });
 }
-
 
 module.exports = {
   before: {

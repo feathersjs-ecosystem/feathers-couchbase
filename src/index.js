@@ -4,18 +4,18 @@ const debug = require('debug');
 const Proto = require('uberproto');
 
 const errors = require('@feathersjs/errors');
-const { 
-  sorter, 
-  matcher, 
-  select, 
-  filterQuery, 
-  _ 
+const {
+  sorter,
+  matcher,
+  select,
+  filterQuery,
+  _
 } = require('@feathersjs/commons');
-//TODO: Add cas support
-export class Service {
+// TODO: Add cas support
+export const Service = class Service {
   constructor (options = {}) {
     this.options = options.options || {};
-    //this.couchbase = options.couchbase 
+    // this.couchbase = options.couchbase
     this.paginate = options.paginate || {};
     this._id = this.id = options.idField || options.id || '_id';
     this._uId = options.startId || 0;
@@ -28,7 +28,7 @@ export class Service {
     this._errors = options.errors || errors;
     this.options.required = options.required || [];
     this._ = _;
-    debug('peep-api::services::couchbase::constructor')(options);
+    debug('feathers-couchbase::constructor')(options);
     /**
      * Defines the degree of consistency required for a particular query.
      * @readonly
@@ -72,115 +72,112 @@ export class Service {
       consistency: ottoman.Consistency.LOCAL
     }
     */
-
   }
   extend (obj) {
-    debug('peep-api::services::couchbase::extend')(Object.prototype.toString.call(obj).slice(8, -1));
+    debug('feathers-couchbase::extend')(Object.prototype.toString.call(obj).slice(8, -1));
     if (obj.constructor) {
-      debug('peep-api::services::couchbase::extend')(obj.constructor.name);
+      debug('feathers-couchbase::extend')(obj.constructor.name);
     }
     return Proto.extend(obj, this);
   }
-  setup(app,path){
-    debug('peep-api::services::couchbase::setup')((!!app),path);
+  setup (app, path) {
+    debug('feathers-couchbase::setup')((!!app), path);
     this.app = app;
     this.path = path;
     this.bucket = this.app.get('couchbaseClient').bucket;
   }
-  find(params) {
-    debug('peep-api::services::couchbase::find')(params);
+  find (params) {
+    debug('feathers-couchbase::find')(params);
     return this._query(params);
   }
-  get(id, params) {
-    debug('peep-api::services::couchbase::get')(id,params);
-    return this._get(id,params);
+  get (id, params) {
+    debug('feathers-couchbase::get')(id, params);
+    return this._get(id, params);
   }
-  create(data, params) {
-    //TODO: Handle Array
+  create (data, params) {
+    // TODO: Handle Array
     /*
     if (Array.isArray(data)) {
       return Promise.all(data.map(current => this.create(current,params)));
     }
     */
-    debug('peep-api::services::couchbase::create')(data,params);
-    return this._create(data,params);
+    debug('feathers-couchbase::create')(data, params);
+    return this._create(data, params);
   }
-  update(id, data, params) {
-    debug('peep-api::services::couchbase::update')(id,data,params);
-    return this._update(id,data,params);
+  update (id, data, params) {
+    debug('feathers-couchbase::update')(id, data, params);
+    return this._update(id, data, params);
   }
-  patch(id, data, params) {
-    debug('peep-api::services::couchbase::patch')(id,data,params);
-    return this._patch(id,data,params);
+  patch (id, data, params) {
+    debug('feathers-couchbase::patch')(id, data, params);
+    return this._patch(id, data, params);
   }
-  remove(id, params) {
-    //TODO: Fix Remove Backup
+  remove (id, params) {
+    // TODO: Fix Remove Backup
     if (params.backup) {
-      //return this._get(id);
+      // return this._get(id);
     }
-    debug('peep-api::services::couchbase::create')(data,params);
-    return this._remove(id,params);
-    //this.backup(id,params)
+    debug('feathers-couchbase::create')(id, params);
+    return this._remove(id, params);
+    // this.backup(id,params)
     //      .then(()=>this.removeBackup('status-'+id,params));
   }
-  _applyDataMeta(data,params) {
-    if(!data.channel){
-      debug('peep-api::services::couchbase::_applyDataChannel')(data,params);
+  _applyDataMeta (data, params) {
+    if (!data.channel) {
+      debug('feathers-couchbase::_applyDataChannel')(data, params);
       data.channel = params.channel;
     }
-    if(!data.CLIENT_IP){
-      debug('peep-api::services::couchbase::_applyDataChannel')(data,params);
+    if (!data.CLIENT_IP) {
+      debug('feathers-couchbase::_applyDataChannel')(data, params);
       data.CLIENT_IP = params.CLIENT_IP;
     }
     return data;
   }
-  _patch(id, data, params) {
+  _patch (id, data, params) {
     var msg = 'PATCH Not Implamented';
-    debug('peep-api::services::couchbase::_patch')(msg, id,data,params);
-    return Promise.reject(msg);
+    debug('feathers-couchbase::_patch')(msg, id, data, params);
+    return Promise.reject(new errors.BadRequest(msg));
   }
-  _countQuery(query) {
-    var countQuery = this.couchbase.N1qlQuery.fromString(query.replace('*','COUNT(*)'));
-    return new Promise((resolve,reject)=>{
-      this.bucket.query(countQuery, (err,total) => {
-        if(!err) {
+  _countQuery (query) {
+    var countQuery = this.couchbase.N1qlQuery.fromString(query.replace('*', 'COUNT(*)'));
+    return new Promise((resolve, reject) => {
+      this.bucket.query(countQuery, (err, total) => {
+        if (!err) {
           return resolve(total);
         }
-        return reject(err);
+        return reject(new errors.GeneralError(err));
       });
     });
   }
-  _buildQueryOld(params){
-    //var QUERY = 'SELECT *, META(val).id FROM default val WHERE META(val).id LIKE "'+query+'%" ';
-    debug('peep-api::services::couchbase::_buildQueryOld')(params);
+  _buildQueryOld (params) {
+    // var QUERY = 'SELECT *, META(val).id FROM default val WHERE META(val).id LIKE "'+query+'%" ';
+    debug('feathers-couchbase::_buildQueryOld')(params);
     params = params || {};
     params.query = params.query || {};
     params.paginate = params.paginate || false;
-    debug('peep-api::services::couchbase::_query')(params);
-    //var FILTER_ARRAY = [' WHERE val._type LIKE "Artist"'];
+    debug('feathers-couchbase::_query')(params);
+    // var FILTER_ARRAY = [' WHERE val._type LIKE "Artist"'];
     var FILTER_ARRAY = [];
-    Object.keys(params.query).map((key)=>FILTER_ARRAY.push('val.'+key+' LIKE "' + params.query[key] +'"'));
+    Object.keys(params.query).map((key) => FILTER_ARRAY.push('val.' + key + ' LIKE "' + params.query[key] + '"'));
     var QUERY;
-    if (FILTER_ARRAY.length > 0){
+    if (FILTER_ARRAY.length > 0) {
       QUERY = 'SELECT * FROM default val WHERE ' + FILTER_ARRAY.join(' AND ');
     } else {
       QUERY = 'SELECT * FROM default val';
     }
 
-    debug('peep-api::services::couchbase::_buildQueryOld')(QUERY);
+    debug('feathers-couchbase::_buildQueryOld')(QUERY);
     return QUERY;
   }
-  _query(params,fullQs) {
+  _query (params, fullQs) {
     if (!fullQs) {
       fullQs = this._buildQueryOld(params);
     }
 
-
-
     var self = this;
-    var QueryPromise = new Promise((resolve,reject)=>{
+    var QueryPromise = new Promise((resolve, reject) => {
       var n1qlQuery = this.couchbase.N1qlQuery.fromString(fullQs);
-      debug('peep-api::services::couchbase::_query::error')(n1qlQuery,fullQs);
+      debug('feathers-couchbase::_query::error')(n1qlQuery, fullQs);
       if (params.consistency) {
         if (params.consistency === this.SearchConsistency.GLOBAL) {
           n1qlQuery.consistency(this.couchbase.N1qlQuery.Consistency.REQUEST_PLUS);
@@ -192,16 +189,16 @@ export class Service {
           return reject(new Error('Unexpected consistency option.'));
         }
       }
-      debug('peep-api::services::couchbase::_query::error')(n1qlQuery,fullQs);
-      self.bucket.query(n1qlQuery, (err,data) => {
+      debug('feathers-couchbase::_query::error')(n1qlQuery, fullQs);
+      self.bucket.query(n1qlQuery, (err, data) => {
         if (err) {
-          debug('peep-api::services::couchbase::_query::error')(err);
+          debug('feathers-couchbase::_query::error')(err);
           return reject(err);
         }
-        debug('peep-api::services::couchbase::_query::result')(data);
+        debug('feathers-couchbase::_query::result')(data);
         return resolve(data);
       });
-    }).then((res)=>res.map((itm)=>itm.val));
+    }).then((res) => res.map((itm) => itm.val));
     /*
     if(params.paginate){
       return this._countQuery(QUERY).then((total)=>{
@@ -227,35 +224,34 @@ export class Service {
     */
     // We try and open bucket again here. If its successful, couchbaseConnected will bet set to true and next time data will be fetched from couchbase
     return QueryPromise;
-    //.then(logReturn)
-    //.then(jsonStringify)
-
+    // .then(logReturn)
+    // .then(jsonStringify)
   }
-  //update is single patch is mult
-  _update(id, data, params) {
-    debug('peep-api::services::couchbase::_update::start')(id,data,params);
-    return this._checkRequired(data).then(()=>{
-      return new Promise((resolve,reject) => {
-        this.bucket.upsert(id,data,function(err,result){
+  // update is single patch is mult
+  _update (id, data, params) {
+    debug('feathers-couchbase::_update::start')(id, data, params);
+    return this._checkRequired(data).then(() => {
+      return new Promise((resolve, reject) => {
+        this.bucket.upsert(id, data, function (err, result) {
           if (err) {
-            debug('peep-api::services::couchbase::_update::error')(id,data,params,err);
+            debug('feathers-couchbase::_update::error')(id, data, params, err);
             return reject(err);
           }
-          debug('peep-api::services::couchbase::_update::done')(id,data,params,result);
+          debug('feathers-couchbase::_update::done')(id, data, params, result);
           resolve(data);
         });
       });
     });
   }
-  _create(data,params) {
-    //TODO: Handle Array
+  _create (data, params) {
+    // TODO: Handle Array
     /*
     if (Array.isArray(data)) {
       return Promise.all(data.map(current => this.create(current,params)));
     }
     */
-    //TODO: Replace with createKey Method
-    var hasId = ''+(!!data._id);
+    // TODO: Replace with createKey Method
+    var hasId = '' + (!!data._id);
 
     if (!data._id) {
       data._id = uuid();
@@ -263,7 +259,7 @@ export class Service {
 
     var cbKey = data._id;
     if (data._type) {
-      cbKey = data._type +'|'+data._id;
+      cbKey = data._type + '|' + data._id;
     }
 
     if (data.cbKey) {
@@ -272,127 +268,132 @@ export class Service {
     data.cbKey = cbKey;
     var self = this;
     return this._checkRequired(data)
-      .then(()=>self._upsert(cbKey,data))
-      .catch((err)=>{
-        debug('peep-api::services::couchbase::_create::error')(data,params,hasId,err);
+      .then(() => self._upsert(cbKey, data))
+      .catch((err) => {
+        debug('feathers-couchbase::_create::error')(data, params, hasId, err);
       });
   }
-  _upsert(key,data){
-    return new Promise((resolve,reject) => {
-      this.bucket.upsert(key,data,(err,done) => {
+  _upsert (key, data) {
+    return new Promise((resolve, reject) => {
+      this.bucket.upsert(key, data, (err, done) => {
         if (!err) {
-          debug('peep-api::services::couchbase::_upsert::result')({key,data,done});
+          debug('feathers-couchbase::_upsert::result')({key, data, done});
           resolve(data);
         } else {
-          debug('peep-api::services::couchbase::_upsert::error')({key,data,err});
+          debug('feathers-couchbase::_upsert::error')({key, data, err});
           reject(err);
         }
       });
     });
   }
-  _checkRequired(data) {
+  _checkRequired (data) {
     var Keys = Object.keys(data);
-    return new Promise((resolve,reject) => {
-      if (this.options.required.length > 0 ) {
-        this.options.required.map((key)=>{
-          if (key.indexOf(Keys) == -1) {
-            reject('data.'+key+' is a required property');
+    return new Promise((resolve, reject) => {
+      if (this.options.required.length > 0) {
+        this.options.required.map((key) => {
+          if (key.indexOf(Keys) === -1) {
+            reject(new Error('data.' + key + ' is a required property'));
           }
         });
       }
       resolve(true);
     });
   }
-  _backup(id, params) {
-    var DELETE_ID = 'recycleBin|'+id+'-'+new Date().toISOString();
+  _backup (id, params) {
+    var DELETE_ID = 'recycleBin|' + id + '-' + new Date().toISOString();
     return this.get(id)
-      .then((TARGET)=>{
-        return this._create(DELETE_ID,TARGET);
-      }).then(()=>{
+      .then((TARGET) => {
+        return this._create(DELETE_ID, TARGET);
+      }).then(() => {
         this._remove(id, params);
       });
   }
-  _servicelogger({ id, params, data, commandName }){
-    data.lastModifyedBy = 'peep-api::services::couchbase::'+commandName;
+  _servicelogger ({ id, params, data, commandName }) {
+    data.lastModifyedBy = 'feathers-couchbase::' + commandName;
     data.lastModifyed = new Date().toISOString();
     let serviceArguments = { id, params, data };
-    return this.app.service('servicelogger').create({ date: data.lastModifyed, serviceName: 'couchbase', commandName, serviceArguments});
+    return this.app.service('servicelogger').create({
+      date: data.lastModifyed,
+      serviceName: 'couchbase',
+      commandName,
+      serviceArguments
+    });
   }
-  _createLogEntryPromise({ id, params, data }) {
+  _createLogEntryPromise ({ id, params, data }) {
     return Promise.resolve({ id, params, data });
   }
-  _remove(id, params) {
+  _remove (id, params) {
     return this._get(id)
-      .then((data)=> {
-        return this._isArray(id,this._removePromise)
-          //Logging includes backup!
-          .then(()=> {
-            if (Array.isArray(id)){
-              debug('peep-api::services::couchbase::_isArray::true')(id);
-              return Promise.all(data.map((data)=>this._servicelogger({ id: data._id, params, data })));
+      .then((data) => {
+        return this._isArray(id, this._removePromise)
+          // Logging includes backup!
+          .then(() => {
+            if (Array.isArray(id)) {
+              debug('feathers-couchbase::_isArray::true')(id);
+              return Promise.all(data.map((data) => this._servicelogger({ id: data._id, params, data })));
             } else {
-              debug('peep-api::services::couchbase::_isArray::false')(id);
+              debug('feathers-couchbase::_isArray::false')(id);
               return this._servicelogger(id, params, data);
             }
           });
       });
   }
-  _removePromise(id) {
-    return new Promise((resolve,reject)=>{
-      this.bucket.remove(id ,(error,done) => {
+  _removePromise (id) {
+    return new Promise((resolve, reject) => {
+      this.bucket.remove(id, (error, done) => {
         if (!error) {
-          debug('peep-api::services::couchbase::_removePromise::done')(id,done);
+          debug('feathers-couchbase::_removePromise::done')(id, done);
           resolve({ id, done });
         } else {
-          debug('peep-api::services::couchbase::_removePromise::error')(id,error);
-          reject({ id, error });
+          debug('feathers-couchbase::_removePromise::error')(id, error);
+
+          reject(new Error({ id, error }));
         }
       });
     });
   }
-  _get(id,params) {
-    debug('peep-api::services::couchbase::_get')(id,params);
+  _get (id, params) {
+    debug('feathers-couchbase::_get')(id, params);
     return this._isArray(id);
   }
-  _isArray(id){
-    if (Array.isArray(id)){
-      //TODO: Use getMulti?
-      debug('peep-api::services::couchbase::_isArray::true')(id);
+  _isArray (id) {
+    if (Array.isArray(id)) {
+      // TODO: Use getMulti?
+      debug('feathers-couchbase::_isArray::true')(id);
       return Promise.all(id.map(this._getPromise));
     } else {
-      debug('peep-api::services::couchbase::_isArray::false')(id);
+      debug('feathers-couchbase::_isArray::false')(id);
       return this._getPromise(id);
     }
   }
-  _getPromise(id) {
-    console.log(this.bucket,super.bucket);
-    console.log('ddddddddd');
-    console.log(this.bucket);
-    var promise = new Promise((resolve,reject) =>{
-      debug('peep-api::services::couchbase::_get::result')(id);
-      this.bucket.get(id,(err,data)=>{
+  _getPromise (id) {
+    debug('feathers-couchbase::_getPromise::result')(id);
+    var promise = new Promise((resolve, reject) => {
+      this.bucket.get(id, (err, data) => {
         if (!err) {
-          debug('peep-api::services::couchbase::_get::result')(id,data);
+          debug('feathers-couchbase::_getPromise::result')(id, data);
           resolve(data.value);
         }
-        reject({err, id });
+        console.log(err, id)
+        reject(new errors.BadRequest(err));
       });
     });
     return promise;
   }
-  _getMultiPromise(ids) {
-    //TODO: Better Error Handling
-    return new Promise((resolve,reject) =>{
-      this.bucket.getMulti(ids,(err,data)=>{
+  _getMultiPromise (ids) {
+    // TODO: Better Error Handling
+    return new Promise((resolve, reject) => {
+      this.bucket.getMulti(ids, (err, data) => {
         if (!err) {
-          debug('peep-api::services::couchbase::_get::result')(data);
+          debug('feathers-couchbase::_get::result')(data);
           resolve(data);
         }
-        reject({err, ids });
-      }).then((data) =>{
+
+        reject(new Error({err, ids}));
+      }).then((data) => {
         data
-          .filter((entry)=> typeof entry.value !== Error) // Condition maybe Wrong?=!
-          .map((result)=>result.value);
+          .filter((entry) => typeof entry.value !== typeof Error) // Condition maybe Wrong?=!
+          .map((result) => result.value);
         return data;
       });
     });
@@ -410,7 +411,7 @@ export class Service {
  * @private
  * @ignore
  */
-  _buildFilterExprs(filters, expressions, root) {
+  _buildFilterExprs (filters, expressions, root) {
     var SPECIAL_KEYS = ['$exists', '$missing', '$contains', '$like', '$in'];
     var BOOLEAN = ['or', 'and'];
     if (!root) {
@@ -486,12 +487,12 @@ export class Service {
  *     The filter expression for filtering documents for counting.
  * @param {StoreAdapter~SearchCallback} callback
  */
-  _count(params) {
+  _count (params) {
     var options = params;
     options.filter = params.query;
     debug('CbStoreAdapter::count')(options);
     var expressions = [];
-    //expressions.push('_type=\'' + modelName + '\'');
+    // expressions.push('_type=\'' + modelName + '\'');
     if (options.filter) {
       this._buildFilterExprs(options.filter, expressions);
     }
@@ -504,7 +505,7 @@ export class Service {
     var fullQs = 'SELECT COUNT(b) AS count FROM `' + bucketName + '` b' + whereQs;
     debug('CbStoreAdapter::count~query')(fullQs);
 
-    return this._query({ QUERY: fullQs}).then((res)=>{
+    return this._query({ QUERY: fullQs }).then((res) => {
       if (res.length > 0) {
         return res[0].count;
       } else {
@@ -527,8 +528,6 @@ export class Service {
       });
     });
     */
-
-
   }
 
   /**
@@ -549,17 +548,17 @@ export class Service {
  *     A field name or list of field names to sort the results by.
  *
  */
-  _fullQueryString(params){
+  _fullQueryString (params) {
     var options = {};
     options.filter = params.query;
-    options.limit =  params.limit;
+    options.limit = params.limit;
     options.skip = params.skip;
     options.sort = params.sort;
-    debug('CbStoreAdapter::find')(options,params);
+    debug('CbStoreAdapter::find')(options, params);
 
     var expressions = [];
 
-    //expressions.push('_type=\'' + modelName + '\'');
+    // expressions.push('_type=\'' + modelName + '\'');
     if (options.filter) {
       this._buildFilterExprs(options.filter, expressions);
     }
@@ -601,34 +600,35 @@ export class Service {
         throw new Error('Unknown sort value.');
       }
     }
-    //'SELECT META(b).id AS id FROM `' + bucketName +
+    // 'SELECT META(b).id AS id FROM `' + bucketName +
     var fullQs =
       'SELECT * FROM `' + bucketName +
       '` val' + whereQs + sortQs + pagingQs;
     debug('CbStoreAdapter::find~query')(fullQs);
     return fullQs;
   }
-  //._find({ query: { _type: 'Artist', images: { $contains: { path: '2.jpg' } } } }).then(console.log)
-  _find(params) {
+  // ._find({ query: { _type: 'Artist', images: { $contains: { path: '2.jpg' } } } }).then(console.log)
+  _find (params) {
     var fullQs = this._fullQueryString(params);
-    return this._query(params,fullQs);
+    return this._query(params, fullQs);
   }
-  _createKey(data,params) {
-    //TODO: if params use that key
+  _createKey (data, params) {
+    // TODO: if params use that key
     if (data._id === undefined) {
       data._id = uuid();
     }
-    debug('feathers-couchbase::_createKey')(data._id,params);
+    debug('feathers-couchbase::_createKey')(data._id, params);
     return data;
   }
 }
 
 export default function init (options) {
-  if (!this.get('couchbaseClient').bucket){
+  if (!this.get('couchbaseClient').bucket) {
     console.log('WARNING!!!: Found no couchbaseClient app Config');
+    throw new Error('no couchbaseClient app Config');
   }
 
   return new Service(options);
 }
 
-//init.Service = Service;
+// init.Service = Service;
