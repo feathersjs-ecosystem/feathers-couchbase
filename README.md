@@ -8,61 +8,27 @@
 
 ## Use
 ```javascript
-// Create App Model
-function createModel(app)
-module.exports = function (app) {
-  const Cluster = app.get('couchbaseClusterConfig'); // from config
-  const Model = {
-   couchbaseClient: Couchbase,
-   couchbaseCluster:
-   couchbaseBucket:
-   paginate:
-  }
 
-  return Model;
-};
+const couchbase = require('couchbase')
+const cluster = new couchbase.Cluster('couchbase://127.0.0.1')
+const bucket = cluster.openBucket('default')
+const config = {
+  cluster,
+  bucket,
+  // Optional Default uses module resolve(couchbase)
+}
 
+const createService = require('feathers-couchbase')
 
+// Method one Set the couchbaseClient on App
+app.set('couchbaseClient', config);
+app.use('/',createService()); // reads automatic app.couchbaseClient
 
+// Method 2
+app.use('/',createService(config));
 
-const FeathersCouchbase = require('feathers-couchbase')
-app.set(CouchbaseConnection, FeathersCouchbase(Model)
-```
+// Method 4
+import { Service } from 'feathers-couchbase';
+new Service(config)
 
-
-
-
-```javascript
-// Initializes the `users` service on path `/api/users`
-const createService = require('feathers-nedb');
-const createModel = require('../../models/users.model');
-const hooks = require('./users.hooks');
-//const filters = require('./users.filters');
-
-module.exports = function () {
-  const app = this;
-  const Model = createModel(app);
-  const paginate = app.get('paginate');
-
-  const options = {
-    name: 'users',
-    Model,
-    paginate
-  };
-
-  // Initialize our service with any options it requires
-  app.use('/api/users', createService(options));
-
-
-  // Get our initialized service so that we can register hooks and filters
-  const service = app.service('api/users');
-
-  
-
-  service.hooks(hooks);
-
-  // if (service.filter) {
-  //  service.filter(filters);
-  //}
-};
 ```
