@@ -5,17 +5,16 @@
 - pagination
 - generic n1ql find method
 
-
 ## Use
-```javascript
 
+```javascript
 const couchbase = require('couchbase')
 const cluster = new couchbase.Cluster('couchbase://127.0.0.1')
 const bucket = cluster.openBucket('default')
 const config = {
   cluster,
   bucket,
-  // Optional Default uses module resolve(couchbase)
+  // Optional Default uses module npm.resolve(couchbase)
 }
 
 const createService = require('feathers-couchbase')
@@ -30,5 +29,4 @@ app.use('/',createService(config));
 // Method 4
 import { Service } from 'feathers-couchbase';
 new Service(config)
-
 ```
