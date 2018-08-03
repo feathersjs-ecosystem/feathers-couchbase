@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "couchbase": "^2.4.3",
-    "@feathersjs/commons": "^1.4.0",
+    "@feathersjs/commons": "^2.0.0",
     "@feathersjs/errors": "^3.2.0",
     "lodash.omit": "^4.3.0",
     "uberproto": "^1.2.0"
