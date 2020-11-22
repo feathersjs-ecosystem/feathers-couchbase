@@ -24,8 +24,9 @@
   "contributors": [
     "Frank Lemanschik <frank@dspeed.eu> (https://github.com/frank-dspeed)"
   ],
-  "main": "lib/index",
-  "module": "lib/index.mjs",
+  "type":"commonjs",
+  "main": "lib/index.js",
+  "module": "lib/wrapper.mjs",
   "scripts": {
     "prepublish": "npm run compile",
     "publish": "git push origin --tags && git push origin",
@@ -43,16 +44,11 @@
     "start": "node example/app",
     "semantic-release": "semantic-release"
   },
-  "semistandard": {
-    "env": [
-      "mocha"
-    ],
-    "ignore": [
-      "/lib"
-    ]
-  },
   "engines": {
     "node": ">= 4"
+  },
+  "directories": {
+    "lib": "lib"
   },
   "dependencies": {
     "couchbase": "^2.4.3",
