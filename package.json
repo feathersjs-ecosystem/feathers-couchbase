@@ -1,7 +1,7 @@
 {
   "name": "feathers-couchbase",
   "description": "A modern Couchbase adapter for Feathers",
-  "version": "1.0.0",
+  "version": "2.7.14",
   "homepage": "https://github.com/feathersjs-ecosystem/feathers-couchbase",
   "main": "lib/index",
   "types": "types",
