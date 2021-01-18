@@ -1,6 +1,7 @@
 # feathers-couchbase
 
-[![Dependency Status](https://img.shields.io/david/daffl/feathers-couchbase.svg?style=flat-square)](https://david-dm.org/daffl/feathers-couchbase)
+[![CI](https://github.com/feathersjs-ecosystem/feathers-couchbase/workflows/CI/badge.svg)](https://github.com/feathersjs-ecosystem/feathers-couchbase/actions?query=workflow%3ACI)
+[![Dependency Status](https://img.shields.io/david/daffl/feathers-couchbase.svg?style=flat-square)](https://david-dm.org/feathers-couchbase)
 [![Download Status](https://img.shields.io/npm/dm/feathers-couchbase.svg?style=flat-square)](https://www.npmjs.com/package/feathers-couchbase)
 
 A [Feathers](https://feathersjs.com) service adapter for Couchbase.
