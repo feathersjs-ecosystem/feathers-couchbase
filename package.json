@@ -1,19 +1,10 @@
 {
   "name": "feathers-couchbase",
   "description": "A modern Couchbase adapter for Feathers",
-  "version": "2.7.14",
+  "version": "3.0.0",
   "homepage": "https://github.com/feathersjs-ecosystem/feathers-couchbase",
   "main": "lib/index",
   "types": "types",
-  "keywords": [
-    "feathers",
-    "feathers-plugin"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/feathersjs-ecosystem/feathers-couchbase.git"
-  },
   "keywords": [
     "feathers",
     "feathers-plugin",
@@ -23,6 +14,11 @@
     "couchbase",
     "service"
   ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feathersjs-ecosystem/feathers-couchbase.git"
+  },
   "contributors": [
     "Frank Lemanschik <frank@dspeed.eu> (https://github.com/frank-dspeed)",
     "David Luecke <daff@neyeon.com>"
