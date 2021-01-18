@@ -1,6 +1,7 @@
 # feathers-couchbase
 
-[![Dependency Status](https://img.shields.io/david/daffl/feathers-couchbase.svg?style=flat-square)](https://david-dm.org/daffl/feathers-couchbase)
+[![CI](https://github.com/feathersjs-ecosystem/feathers-couchbase/workflows/CI/badge.svg)](https://github.com/feathersjs-ecosystem/feathers-couchbase/actions?query=workflow%3ACI)
+[![Dependency Status](https://img.shields.io/david/daffl/feathers-couchbase.svg?style=flat-square)](https://david-dm.org/feathers-couchbase)
 [![Download Status](https://img.shields.io/npm/dm/feathers-couchbase.svg?style=flat-square)](https://www.npmjs.com/package/feathers-couchbase)
 
 A [Feathers](https://feathersjs.com) service adapter for Couchbase.
@@ -34,13 +35,14 @@ __Options:__
 - `events` (*optional*) - A list of [custom service events](https://docs.feathersjs.com/api/events.html#custom-events) sent by this service
 - `name` - The name of the bucket (must be created in Couchbase admin)
 - `cluster` - The couchbase cluster instance
+- `retries` - The number of times to retry insertion (see https://docs.couchbase.com/nodejs-sdk/current/howtos/error-handling.html)
 - `paginate` (*optional*) - A [pagination object](https://docs.feathersjs.com/api/databases/common.html#pagination) containing a `default` and `max` page size
 - `whitelist` (*optional*) - A list of additional query parameters to allow
 - `multi` (*optional*) - Allow `create` with arrays and `update` and `remove` with `id` `null` to change multiple items. Can be `true` for all methods or an array of allowed methods (e.g. `[ 'remove', 'create' ]`)
 
 ## Example
 
-Here is an example of a Feathers server with a `messages` in-memory service that supports pagination:
+Here is an example of a Feathers server with a `messages` Couchbase service.
 
 ```
 $ npm install @feathersjs/feathers @feathersjs/express couchbase feathers-couchbase
@@ -58,7 +60,7 @@ const cluster = new couchbase.Cluster('couchbase://localhost', {
   password: 'test123'
 });
 
-const { CouchbaseService } = require('feathers-couchbase');
+const { CouchbaseService } = require('../lib'); // require('feathers-couchbase')
 
 // Creates an ExpressJS compatible Feathers application
 const app = express(feathers());
@@ -93,39 +95,3 @@ Run the example with `node app` and go to [localhost:3030/messages](http://local
 Copyright (c) 2020
 
 Licensed under the [MIT license](LICENSE).
-
-# TODO
-- make backup configure able 
-
-# New Futures
-
-- update method choose able (n1ql,upsert)
-- patch method choose able (n1ql,upsert)
-- pagination
-- generic n1ql find method
-
-## Use
-
-```javascript
-const couchbase = require('couchbase')
-const cluster = new couchbase.Cluster('couchbase://127.0.0.1')
-const bucket = cluster.openBucket('default')
-const config = {
-  cluster,
-  bucket,
-  // Optional Default uses module npm.resolve(couchbase)
-}
-
-const createService = require('feathers-couchbase')
-
-// Method one Set the couchbaseClient on App
-app.set('couchbaseClient', config);
-app.use('/',createService()); // reads automatic app.couchbaseClient
-
-// Method 2
-app.use('/',createService(config));
-
-// Method 4
-import { Service } from 'feathers-couchbase';
-new Service(config)
-```

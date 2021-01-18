@@ -1,16 +1,19 @@
 {
   "name": "feathers-couchbase",
-  "description": "Feathers Couchbase Service",
-  "version": "0.0.0-development",
-  "homepage": "https://github.com/direktspeed/feathers-couchbase",
+  "description": "A modern Couchbase adapter for Feathers",
+  "version": "2.7.14",
+  "homepage": "https://github.com/feathersjs-ecosystem/feathers-couchbase",
+  "main": "lib/index",
+  "types": "types",
+  "keywords": [
+    "feathers",
+    "feathers-plugin"
+  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/direktspeed/feathers-couchbase.git"
+    "url": "git://github.com/feathersjs-ecosystem/feathers-couchbase.git"
   },
-  "bugs": {
-    "url": "https://github.com/direktspeed/feathers-couchbase/issues"
-  },
-  "license": "Apache-2.0",
   "keywords": [
     "feathers",
     "feathers-plugin",
@@ -20,66 +23,57 @@
     "couchbase",
     "service"
   ],
-  "author": "Feathers <hello@feathersjs.com> (http://feathersjs.com)",
   "contributors": [
-    "Frank Lemanschik <frank@dspeed.eu> (https://github.com/frank-dspeed)"
+    "Frank Lemanschik <frank@dspeed.eu> (https://github.com/frank-dspeed)",
+    "David Luecke <daff@neyeon.com>"
   ],
-  "type":"commonjs",
-  "main": "lib/index.js",
-  "module": "lib/wrapper.mjs",
+  "bugs": {
+    "url": "https://github.com/feathersjs-ecosystem/feathers-couchbase/issues"
+  },
+  "engines": {
+    "node": ">= 12"
+  },
   "scripts": {
-    "prepublish": "npm run compile",
-    "publish": "git push origin --tags && git push origin",
+    "publish": "git push origin --tags && npm run changelog && git push origin",
     "changelog": "github_changelog_generator && git add CHANGELOG.md && git commit -am \"Updating changelog\"",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "compile": "rimraf lib/ && babel -d lib/ src/ && cp src/index.mjs lib/",
-    "scompile": "rimraf lib/ && rimraf src/index.js && mkdir lib && cp src/index.mjs src/index.js && cp src/index.mjs lib/ && babel -d lib/ src/ && rimraf src/index.js",
-    "watch": "babel --watch -d lib/ src/",
-    "lint": "eslint-if-supported semistandard --fix",
-    "mocha": "mocha --opts mocha.opts",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --opts mocha.opts",
-    "test": "rimraf db-data && npm run compile && npm run lint && npm run coverage",
-    "start": "node example/app",
-    "semantic-release": "semantic-release"
+    "lint": "semistandard --fix",
+    "mocha": "mocha --exit --timeout 20000 --recursive test/",
+    "coverage": "nyc --reporter=html --reporter=text npm run mocha",
+    "dtslint": "dtslint types",
+    "test": "npm run lint && npm run coverage"
   },
-  "engines": {
-    "node": ">= 4"
+  "semistandard": {
+    "env": [
+      "mocha"
+    ]
   },
   "directories": {
     "lib": "lib"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
-    "couchbase": "^2.4.3",
-    "@feathersjs/commons": "^4.0.0",
-    "@feathersjs/errors": "^4.0.0",
-    "lodash.omit": "^4.3.0",
-    "uberproto": "^1.2.0"
+    "shortid": "^2.2.16",
+    "couchbase": "^3.0.7",
+    "@feathersjs/adapter-commons": "^4.5.7",
+    "@feathersjs/commons": "^4.5.10",
+    "@feathersjs/errors": "^4.5.10"
   },
   "devDependencies": {
-    "@babel/cli": "7.2.3",
-    "@babel/core": "7.3.4",
-    "@babel/preset-env": "7.3.4",
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.0",
-    "babel-plugin-add-module-exports": "0.2.1",
-    "babel-preset-es2015": "6.24.1",
-    "body-parser": "1.18.2",
-    "chai": "4.1.2",
-    "cz-conventional-changelog": "2.1.0",
-    "eslint-if-supported": "1.0.1",
-    "feathers": "2.2.4",
-    "feathers-rest": "1.8.0",
-    "feathers-service-tests": "0.10.2",
-    "feathers-socketio": "2.0.0",
-    "istanbul": "1.1.0-alpha.1",
-    "mocha": "6.0.2",
-    "rimraf": "2.6.3",
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
+    "@feathersjs/adapter-tests": "^4.5.4",
+    "@feathersjs/express": "^4.5.10",
+    "@feathersjs/feathers": "^4.5.10",
+    "@feathersjs/socketio": "^4.5.10",
+    "@types/node": "^14.14.9",
+    "dtslint": "^4.0.6",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "semistandard": "^16.0.0",
+    "shx": "^0.3.3",
+    "typescript": "^4.1.2"
   }
 }
