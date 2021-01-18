@@ -1,4 +1,0 @@
-{
-    "include": ["src/**/*","lib/**/*","examples/**/*"],
-    "exclude": ["node_modules"]
-}
