@@ -12,10 +12,6 @@ $ npm install --save feathers-couchbase
 
 > __Important:__ `feathers-couchbase` implements the [Feathers Common database adapter API](https://docs.feathersjs.com/api/databases/common.html) and [querying syntax](https://docs.feathersjs.com/api/databases/querying.html).
 
-## Supported by
-
-[![fortify-logo](https://user-images.githubusercontent.com/338316/99841179-9befd280-2b22-11eb-932e-b8ff850fe44c.png)](https://fortify.pro/)
-
 ## API
 
 ### `service([options])`
