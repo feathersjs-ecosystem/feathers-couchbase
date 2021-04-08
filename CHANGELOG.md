@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.0.1](https://github.com/feathersjs-ecosystem/feathers-couchbase/tree/v3.0.1) (2021-04-08)
+
+[Full Changelog](https://github.com/feathersjs-ecosystem/feathers-couchbase/compare/v3.0.0...v3.0.1)
+
+**Merged pull requests:**
+
+- Remove sponsorship logo [\#63](https://github.com/feathersjs-ecosystem/feathers-couchbase/pull/63) ([daffl](https://github.com/daffl))
+- Update dependencies [\#62](https://github.com/feathersjs-ecosystem/feathers-couchbase/pull/62) ([daffl](https://github.com/daffl))
+
 ## [v3.0.0](https://github.com/feathersjs-ecosystem/feathers-couchbase/tree/v3.0.0) (2021-01-18)
 
 [Full Changelog](https://github.com/feathersjs-ecosystem/feathers-couchbase/compare/v2.7.14...v3.0.0)
