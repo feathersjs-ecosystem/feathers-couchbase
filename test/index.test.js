@@ -82,17 +82,16 @@ describe('Feathers Couchbase Service', () => {
         scanConsistency: couchbase.QueryScanConsistency.RequestPlus
       },
       name: 'feathers-test',
-      collection: 'test',
       events: ['testing']
     }));
 
   before(async () => {
     try {
-      await cluster.query('CREATE PRIMARY INDEX `feathers-test-index` ON `feathers-test`._default.`test` USING GSI;');
+      await cluster.query('CREATE PRIMARY INDEX `feathers-test-index` ON `feathers-test`._default.`_default` USING GSI;');
     } catch (error) {
       // Index exists, nothing to do here
     }
-    await cluster.query('DELETE from `feathers-test`._default.`test`;');
+    await cluster.query('DELETE from `feathers-test`._default.`_default`;');
   });
 
   it('exports', () => {
@@ -100,5 +99,4 @@ describe('Feathers Couchbase Service', () => {
   });
 
   testSuite(app, errors, 'people', 'id');
-  // testSuite(app, errors, 'people-customid', 'customid');
 });
