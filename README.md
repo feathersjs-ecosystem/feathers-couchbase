@@ -30,6 +30,8 @@ __Options:__
 - `id` (*optional*, default: `'id'`) - The name of the id field property.
 - `events` (*optional*) - A list of [custom service events](https://docs.feathersjs.com/api/events.html#custom-events) sent by this service
 - `name` - The name of the bucket (must be created in Couchbase admin)
+- `scope` - The name of the scope
+- `collection` - The name of collection
 - `cluster` - The couchbase cluster instance
 - `retries` - The number of times to retry insertion (see https://docs.couchbase.com/nodejs-sdk/current/howtos/error-handling.html)
 - `paginate` (*optional*) - A [pagination object](https://docs.feathersjs.com/api/databases/common.html#pagination) containing a `default` and `max` page size
