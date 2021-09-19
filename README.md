@@ -75,6 +75,8 @@ app.configure(express.rest());
 app.use('/people', new CouchbaseService({
   cluster,
   name: 'feathers-test',
+  scope: 'flights',
+  collection: 'people',
   paginate: {
     default: 10,
     max: 100
