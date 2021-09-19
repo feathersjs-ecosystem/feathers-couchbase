@@ -53,8 +53,8 @@
     "access": "public"
   },
   "dependencies": {
-    "shortid": "^2.2.16",
-    "couchbase": "^3.1.1",
+    "uuid": "^8.3.2",
+    "couchbase": "^3.2.2",
     "@feathersjs/adapter-commons": "^4.5.11",
     "@feathersjs/commons": "^4.5.11",
     "@feathersjs/errors": "^4.5.11"
