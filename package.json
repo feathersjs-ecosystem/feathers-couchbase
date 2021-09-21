@@ -1,7 +1,7 @@
 {
   "name": "feathers-couchbase",
   "description": "A modern Couchbase adapter for Feathers",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "homepage": "https://github.com/feathersjs-ecosystem/feathers-couchbase",
   "main": "lib/index",
   "types": "types",
@@ -53,23 +53,23 @@
     "access": "public"
   },
   "dependencies": {
-    "shortid": "^2.2.16",
-    "couchbase": "^3.1.1",
     "@feathersjs/adapter-commons": "^4.5.11",
     "@feathersjs/commons": "^4.5.11",
-    "@feathersjs/errors": "^4.5.11"
+    "@feathersjs/errors": "^4.5.11",
+    "couchbase": "^3.2.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@feathersjs/adapter-tests": "^4.5.11",
     "@feathersjs/express": "^4.5.11",
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/socketio": "^4.5.11",
-    "@types/node": "^14.14.21",
-    "dtslint": "^4.0.6",
-    "mocha": "^8.2.1",
+    "@types/node": "^16.9.4",
+    "dtslint": "^4.1.6",
+    "mocha": "^9.1.1",
     "nyc": "^15.1.0",
-    "semistandard": "^16.0.0",
+    "semistandard": "^16.0.1",
     "shx": "^0.3.3",
-    "typescript": "^4.1.3"
+    "typescript": "^4.4.3"
   }
 }
